@@ -1,17 +1,29 @@
 import express from "express";
 import "reflect-metadata";
+import database, { check } from "./config/database";
 import dotenv from "dotenv";
 dotenv.config();
 
 import { ApolloServer, gql } from "apollo-server-express";
+import { buildSchema } from "type-graphql";
 
-const app = express();
-const path = "/graphql";
+import ArticleResolver from "./resolver/ArticleResolver";
 
-const server = new ApolloServer({});
+(async () => {
+  const app = express();
+  const path = "/graphql";
+  database.sync({ force: true });
+  await check();
 
-server.applyMiddleware({ app, path });
+  const server = new ApolloServer({
+    schema: await buildSchema({
+      resolvers: [ArticleResolver],
+    }),
+  });
 
-app.listen({ port: process.env.PORT }, () =>
-  console.log(`Server started at http://localhost:4000${server.graphqlPath}`)
-);
+  server.applyMiddleware({ app, path });
+
+  app.listen({ port: process.env.PORT }, () =>
+    console.log(`Server started at http://localhost:4000${server.graphqlPath}`)
+  );
+})();
