@@ -11,8 +11,8 @@ import {
 import Comment from "../type/Comments";
 import CommentModel from "../Models/Comments";
 import ArticleModel from "../Models/Articles";
-import commentArgs from "../type/inputs/addComment";
-import editCommentArgs from "../type/inputs/editComment";
+import commentArgs from "../type/args/addCommentArgs";
+import editCommentArgs from "../type/args/editCommentArgs";
 
 @Resolver(Comment)
 class CommentResolver {

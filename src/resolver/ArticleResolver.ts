@@ -12,7 +12,8 @@ import Article from "../type/Article";
 import Comment from "../type/Comments";
 import ArticleModel from "../Models/Articles";
 import CommentModel from "../Models/Comments";
-import addArticle from "../type/inputs/addArticle";
+import addArticleArgs from "../type/args/addArticleArgs";
+import editArticleArgs from "../type/args/editArticleArgs";
 
 @Resolver((of) => Article)
 class ArticleResolver {
@@ -33,7 +34,7 @@ class ArticleResolver {
 
   @Mutation((returns) => Article)
   async addArcticle(
-    @Args() { title, body }: addArticle
+    @Args() { title, body }: addArticleArgs
   ): Promise<ArticleModel> {
     try {
       const articles: ArticleModel = await ArticleModel.create({
@@ -48,19 +49,15 @@ class ArticleResolver {
   }
 
   @Mutation((returns) => Article)
-  async editArcticle(
-    @Args() { title, body }: addArticle
-  ): Promise<ArticleModel> {
-    try {
-      const articles: ArticleModel = await ArticleModel.create({
-        title,
-        body,
-      });
-      return articles;
-    } catch (err) {
-      console.log(err);
-      return err;
-    }
+  async editArticle(
+    @Args() { id, title, body }: editArticleArgs
+  ): Promise<any> {
+    const article: ArticleModel = await ArticleModel.findByPk(id);
+    await article.update({
+      title,
+      body,
+    });
+    return article;
   }
 
   @FieldResolver()
