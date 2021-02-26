@@ -4,10 +4,11 @@ import database, { check } from "./config/database";
 import dotenv from "dotenv";
 dotenv.config();
 
-import { ApolloServer, gql } from "apollo-server-express";
+import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 
 import ArticleResolver from "./resolver/ArticleResolver";
+import CommentResolver from "./resolver/CommentResolver";
 
 (async () => {
   const app = express();
@@ -17,7 +18,7 @@ import ArticleResolver from "./resolver/ArticleResolver";
 
   const server = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [ArticleResolver],
+      resolvers: [ArticleResolver, CommentResolver],
     }),
   });
 

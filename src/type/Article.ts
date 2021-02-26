@@ -1,8 +1,8 @@
-import { Module } from "module";
 import { Field, ID, ObjectType } from "type-graphql";
+import Comments from "./Comments";
 
 @ObjectType()
-class User {
+class Article {
   @Field((type) => ID)
   id: number;
 
@@ -11,6 +11,9 @@ class User {
 
   @Field((type) => String)
   body: string;
+
+  @Field((type) => [Comments], { nullable: true })
+  comments?: Comments[];
 }
 
-export default User;
+export default Article;

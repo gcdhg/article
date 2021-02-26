@@ -5,11 +5,14 @@ import {
   DataType,
   PrimaryKey,
   AutoIncrement,
+  BelongsTo,
+  ForeignKey,
 } from "sequelize-typescript";
+import Article from "./Articles";
 
 interface IComment {
   id: number;
-  body: string;
+  title: string;
 }
 
 @Table
@@ -22,7 +25,14 @@ class Comment extends Model implements IComment {
   @Column({
     type: DataType.STRING,
   })
-  body: string;
+  title: string;
+
+  @ForeignKey(() => Article)
+  @Column
+  articleId: number;
+
+  @BelongsTo(() => Article)
+  article: Article;
 }
 
 export default Comment;

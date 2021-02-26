@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize-typescript";
 import Article from "../Models/Articles";
+import Comment from "../Models/Comments";
 
 const sequelize = new Sequelize({
   database: "gcdhg",
@@ -7,7 +8,7 @@ const sequelize = new Sequelize({
   username: "gcdhg",
   password: "12345",
   host: "localhost",
-  models: [Article],
+  models: [Article, Comment],
 });
 
 export const check = async () => {

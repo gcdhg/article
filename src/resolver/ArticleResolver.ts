@@ -1,17 +1,28 @@
-import { Resolver, Query, Mutation, Arg } from "type-graphql";
+import {
+  Resolver,
+  Query,
+  Mutation,
+  Arg,
+  FieldResolver,
+  Root,
+  Args,
+} from "type-graphql";
 
 import Article from "../type/Article";
+import Comment from "../type/Comments";
 import ArticleModel from "../Models/Articles";
+import CommentModel from "../Models/Comments";
+import addArticle from "../type/args/article";
 
-@Resolver(Article)
+@Resolver((of) => Article)
 class ArticleResolver {
   @Query((returns) => [Article])
-  async users() {
+  async arcticles() {
     return await ArticleModel.findAll();
   }
 
   @Query((returns) => Article)
-  async arcticles(@Arg("id") id: number) {
+  async arcticle(@Arg("id") id: number) {
     const user = await ArticleModel.findOne({
       where: {
         id: id,
@@ -21,19 +32,49 @@ class ArticleResolver {
   }
 
   @Mutation((returns) => Article)
-  async arcticle(
-    @Arg("title") title: string,
-    @Arg("body") body: string
+  async addArcticle(
+    @Args() { title, body }: addArticle
   ): Promise<ArticleModel> {
     try {
-      const u: ArticleModel = await ArticleModel.create({
+      const articles: ArticleModel = await ArticleModel.create({
         title,
         body,
       });
-      return u;
+      return articles;
     } catch (err) {
       console.log(err);
       return err;
+    }
+  }
+
+  @Mutation((returns) => Article)
+  async editArcticle(
+    @Args() { title, body }: addArticle
+  ): Promise<ArticleModel> {
+    try {
+      const articles: ArticleModel = await ArticleModel.create({
+        title,
+        body,
+      });
+      return articles;
+    } catch (err) {
+      console.log(err);
+      return err;
+    }
+  }
+
+  @FieldResolver()
+  async comments(@Root() art: ArticleModel): Promise<Comment[]> {
+    try {
+      const json: any = art.toJSON();
+      const article: any = await ArticleModel.findByPk(json.id);
+      const comment = await article.$get("comments");
+      const result: Comment[] = comment.map((i) => i.toJSON());
+
+      return result;
+    } catch (err) {
+      console.log(err);
+      return null;
     }
   }
 }

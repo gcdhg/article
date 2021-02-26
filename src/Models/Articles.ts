@@ -5,7 +5,9 @@ import {
   DataType,
   PrimaryKey,
   AutoIncrement,
+  HasMany,
 } from "sequelize-typescript";
+import Comment from "./Comments";
 
 interface IArticle {
   id: number;
@@ -29,6 +31,14 @@ class Article extends Model implements IArticle {
     type: DataType.STRING,
   })
   body: string;
+
+  @HasMany(() => Comment, {
+    foreignKey: "comments",
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+    hooks: true,
+  })
+  comments: Comment[];
 }
 
 export default Article;
