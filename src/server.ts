@@ -24,7 +24,7 @@ import CommentResolver from "./resolver/CommentResolver";
 
   server.applyMiddleware({ app, path });
 
-  app.listen({ port: process.env.PORT }, () =>
+  app.listen({ port: process.env.PORT || 4000 }, () =>
     console.log(`Server started at http://localhost:4000${server.graphqlPath}`)
   );
 })();

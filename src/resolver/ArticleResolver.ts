@@ -3,9 +3,12 @@ import {
   Query,
   Mutation,
   Arg,
+  Int,
   FieldResolver,
   Root,
   Args,
+  Field,
+  ObjectType,
 } from "type-graphql";
 
 import Article from "../type/Article";
@@ -29,6 +32,14 @@ class ArticleResolver {
         id: id,
       },
     });
+    // const len = await ArticleModel.findAndCountAll();
+    // const first: number = random(len.count);
+    // let second: number;
+    // do {
+    //   second = random(len.count);
+    // } while (second === first);
+    // const randomfield = [len.rows[first], len.rows[second]];
+    // return { user, randomfield };
     return user;
   }
 
@@ -91,18 +102,31 @@ class ArticleResolver {
   }
 
   @FieldResolver()
-  async randomfield(@Root() art: ArticleModel): Promise<number[]> {
-    const random = (len) => Math.floor(Math.random() * len);
-
-    const articles = await ArticleModel.findAll({
+  async randomfield(@Root() _art: ArticleModel): Promise<number[]> {
+    const articles = await ArticleModel.findAndCountAll({
       attributes: ["id"],
     });
-    const len = articles.length - 1;
-    const rand = random(len);
-    let result: any[] = articles.slice(rand, rand + 2).map((a) => a.toJSON());
-    result = result.map((a) => a.id);
+    const arts: any[] = articles.rows
+      .map((a) => a.toJSON())
+      .map((a: any) => a.id);
+    if (articles.count > 2) {
+      const [first, second] = random(articles.count);
+      const result: number[] = [arts[first], arts[second]];
+      return result;
+    }
+    const result: number[] = arts.slice(0);
     return result;
   }
 }
+
+const random = (len: number): number[] => {
+  let second;
+  const first = Math.floor(Math.random() * len);
+  do {
+    second = Math.floor(Math.random() * len);
+  } while (first === second);
+
+  return [first, second];
+};
 
 export default ArticleResolver;
