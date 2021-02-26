@@ -89,6 +89,20 @@ class ArticleResolver {
       return null;
     }
   }
+
+  @FieldResolver()
+  async randomfield(@Root() art: ArticleModel): Promise<number[]> {
+    const random = (len) => Math.floor(Math.random() * len);
+
+    const articles = await ArticleModel.findAll({
+      attributes: ["id"],
+    });
+    const len = articles.length - 1;
+    const rand = random(len);
+    let result: any[] = articles.slice(rand, rand + 2).map((a) => a.toJSON());
+    result = result.map((a) => a.id);
+    return result;
+  }
 }
 
 export default ArticleResolver;
