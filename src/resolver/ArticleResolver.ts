@@ -51,12 +51,19 @@ class ArticleResolver {
   @Mutation((returns) => Article)
   async editArticle(
     @Args() { id, title, body }: editArticleArgs
-  ): Promise<any> {
+  ): Promise<Article> {
     const article: ArticleModel = await ArticleModel.findByPk(id);
     await article.update({
       title,
       body,
     });
+    return article;
+  }
+
+  @Mutation((returns) => Article)
+  async deleteArticle(@Arg("id") id: number): Promise<any> {
+    const article: ArticleModel = await ArticleModel.findByPk(id);
+    await article.destroy();
     return article;
   }
 

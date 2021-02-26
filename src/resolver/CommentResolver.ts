@@ -1,12 +1,4 @@
-import {
-  Resolver,
-  Query,
-  Mutation,
-  Arg,
-  FieldResolver,
-  Root,
-  Args,
-} from "type-graphql";
+import { Resolver, Query, Mutation, Arg, Args } from "type-graphql";
 
 import Comment from "../type/Comments";
 import CommentModel from "../Models/Comments";
