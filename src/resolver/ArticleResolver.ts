@@ -6,6 +6,7 @@ import {
   Arg,
   FieldResolver,
   Root,
+  Ctx,
 } from "type-graphql";
 
 import Article from "../type/Article";
@@ -68,22 +69,24 @@ class ArticleResolver {
   }
 
   @FieldResolver()
-  async comments(@Root() art: ArticleModel): Promise<Comment[]> {
+  async comments(@Root() art: ArticleModel, @Ctx() ctx): Promise<Comment[]> {
     try {
-      const json: any = art.toJSON();
-      // const article: ArticleModel = await ArticleModel.findByPk(json.id);
-      // const comment: CommentModel[] = await article.$get("comments");
-      // const result: any = comment.map((i) => i.toJSON());
+      // const json: any = art.toJSON();
+      // // const article: ArticleModel = await ArticleModel.findByPk(json.id);
+      // // const comment: CommentModel[] = await article.$get("comments");
+      // // const result: any = comment.map((i) => i.toJSON());
 
+      // // return result;
+
+      // const comments = await CommentModel.findAll({
+      //   where: {
+      //     articleId: json.id,
+      //   },
+      // });
+      // const result: any = comments.map((i) => i.toJSON());
       // return result;
 
-      const comments = await CommentModel.findAll({
-        where: {
-          articleId: json.id,
-        },
-      });
-      const result: any = comments.map((i) => i.toJSON());
-      return result;
+      return ctx.commentsLoader.load(art);
     } catch (err) {
       console.log(err);
       return null;

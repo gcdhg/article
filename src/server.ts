@@ -1,4 +1,4 @@
-import express, { NextFunction, urlencoded } from "express";
+import express, { NextFunction, Request, Response, urlencoded } from "express";
 import morgan from "morgan";
 
 import "reflect-metadata";
@@ -13,6 +13,9 @@ import ArticleResolver from "./resolver/ArticleResolver";
 import CommentResolver from "./resolver/CommentResolver";
 
 import Article from "./Models/Articles";
+import Comment from "./Models/Comments";
+
+import DataLoader from "dataloader";
 
 (async () => {
   const app = express();
@@ -24,6 +27,20 @@ import Article from "./Models/Articles";
     schema: await buildSchema({
       resolvers: [ArticleResolver, CommentResolver],
     }),
+    context: () => {
+      return {
+        commentsLoader: new DataLoader(async (rawArticles: any) => {
+          let articles = rawArticles.map((a) => a.toJSON());
+
+          const result: any = {};
+          articles.forEach((article) => {
+            result[article.id] = article;
+          });
+
+          return rawArticles.map((a) => result[a]);
+        }),
+      };
+    },
   });
 
   server.applyMiddleware({ app, path });
@@ -42,16 +59,19 @@ import Article from "./Models/Articles";
   app.use(express.json());
   app.use(urlencoded({ extended: true }));
 
-  app.get("/articles/all", async (req, res, next) => {
-    const articles = await Article.findAll();
-    res.status(200).json(articles);
-  });
+  app.get(
+    "/articles/all",
+    async (req: Request, res: Response, next: NextFunction) => {
+      const articles = await Article.findAll();
+      res.status(200).json(articles);
+    }
+  );
 
-  app.use(async (req, res, next) => {
+  app.use(async (req: Request, res: Response, next: NextFunction) => {
     next(new Error());
   });
 
-  app.use((err, req, res, next) => {
+  app.use((err, req: Request, res: Response, next: NextFunction) => {
     res.status(404).json(err);
   });
   const port = 8006;

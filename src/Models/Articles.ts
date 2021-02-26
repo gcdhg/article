@@ -28,7 +28,7 @@ class Article extends Model implements IArticle {
   title: string;
 
   @Column({
-    type: DataType.STRING,
+    type: DataType.TEXT,
   })
   body: string;
 
