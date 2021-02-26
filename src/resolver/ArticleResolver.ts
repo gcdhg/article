@@ -2,13 +2,10 @@ import {
   Resolver,
   Query,
   Mutation,
+  Args,
   Arg,
-  Int,
   FieldResolver,
   Root,
-  Args,
-  Field,
-  ObjectType,
 } from "type-graphql";
 
 import Article from "../type/Article";
@@ -32,14 +29,6 @@ class ArticleResolver {
         id: id,
       },
     });
-    // const len = await ArticleModel.findAndCountAll();
-    // const first: number = random(len.count);
-    // let second: number;
-    // do {
-    //   second = random(len.count);
-    // } while (second === first);
-    // const randomfield = [len.rows[first], len.rows[second]];
-    // return { user, randomfield };
     return user;
   }
 
