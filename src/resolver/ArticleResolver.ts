@@ -12,7 +12,7 @@ import Article from "../type/Article";
 import Comment from "../type/Comments";
 import ArticleModel from "../Models/Articles";
 import CommentModel from "../Models/Comments";
-import addArticle from "../type/args/article";
+import addArticle from "../type/inputs/addArticle";
 
 @Resolver((of) => Article)
 class ArticleResolver {
@@ -67,10 +67,18 @@ class ArticleResolver {
   async comments(@Root() art: ArticleModel): Promise<Comment[]> {
     try {
       const json: any = art.toJSON();
-      const article: any = await ArticleModel.findByPk(json.id);
-      const comment = await article.$get("comments");
-      const result: Comment[] = comment.map((i) => i.toJSON());
+      // const article: ArticleModel = await ArticleModel.findByPk(json.id);
+      // const comment: CommentModel[] = await article.$get("comments");
+      // const result: any = comment.map((i) => i.toJSON());
 
+      // return result;
+
+      const comments = await CommentModel.findAll({
+        where: {
+          articleId: json.id,
+        },
+      });
+      const result: any = comments.map((i) => i.toJSON());
       return result;
     } catch (err) {
       console.log(err);

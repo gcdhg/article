@@ -2,7 +2,7 @@ import { Min, Max } from "class-validator";
 import { ArgsType, Field, ID, Int } from "type-graphql";
 
 @ArgsType()
-class addArticle {
+class addComment {
   @Field()
   title: string;
 
@@ -11,4 +11,4 @@ class addArticle {
   articleId: number;
 }
 
-export default addArticle;
+export default addComment;

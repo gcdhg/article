@@ -11,7 +11,8 @@ import {
 import Comment from "../type/Comments";
 import CommentModel from "../Models/Comments";
 import ArticleModel from "../Models/Articles";
-import commentArgs from "../type/args/comment";
+import commentArgs from "../type/inputs/addComment";
+import editCommentArgs from "../type/inputs/editComment";
 
 @Resolver(Comment)
 class CommentResolver {
@@ -49,8 +50,31 @@ class CommentResolver {
       return comment;
     } catch (err) {
       console.log(err);
-      throw new err();
+      throw err();
     }
+  }
+
+  @Mutation((returns) => Comment)
+  async removeComment(@Arg("id") id: number) {
+    try {
+      let article = await CommentModel.findOne({
+        where: { id },
+      });
+
+      return await article.destroy();
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  }
+
+  @Mutation((returns) => Comment)
+  async editComment(@Args() { id, title }: editCommentArgs): Promise<Comment> {
+    const comment = await CommentModel.findByPk(id);
+    await comment.update({
+      title,
+    });
+    return comment;
   }
 }
 
