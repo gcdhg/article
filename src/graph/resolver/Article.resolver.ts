@@ -9,12 +9,12 @@ import {
   Ctx,
 } from "type-graphql";
 
-import Article from "../type/Article";
-import Comment from "../type/Comments";
-import ArticleModel from "../Models/Articles";
-import CommentModel from "../Models/Comments";
-import addArticleArgs from "../type/args/addArticleArgs";
-import editArticleArgs from "../type/args/editArticleArgs";
+import Article from "../type/model/Article";
+import Comment from "../type/model/Comments";
+import ArticleModel from "../../db/Models/Articles";
+import CommentModel from "../../db/Models/Comments";
+import addArticleArgs from "../type/args/addArticle.args";
+import editArticleArgs from "../type/args/editArticle.args";
 
 @Resolver((of) => Article)
 class ArticleResolver {
@@ -85,8 +85,9 @@ class ArticleResolver {
       // });
       // const result: any = comments.map((i) => i.toJSON());
       // return result;
+      const article: any = art.toJSON();
 
-      return ctx.commentsLoader.load(art);
+      return ctx.commentsLoader.load(article.id);
     } catch (err) {
       console.log(err);
       return null;

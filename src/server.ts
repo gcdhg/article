@@ -2,24 +2,25 @@ import express, { NextFunction, Request, Response, urlencoded } from "express";
 import morgan from "morgan";
 
 import "reflect-metadata";
-import database, { check } from "./config/database";
+import database, { check } from "./db/config/database";
 import dotenv from "dotenv";
 dotenv.config();
 
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 
-import ArticleResolver from "./resolver/ArticleResolver";
-import CommentResolver from "./resolver/CommentResolver";
+import ArticleResolver from "./graph/resolver/Article.resolver";
+import CommentResolver from "./graph/resolver/Comment.resolver";
 
-import Article from "./Models/Articles";
-import Comment from "./Models/Comments";
+import Article from "./db/Models/Articles";
+import Comment from "./db/Models/Comments";
 
 import DataLoader from "dataloader";
 
 (async () => {
   const app = express();
   const path = "/graphql";
+
   database.sync({ force: true });
   await check();
 
@@ -29,15 +30,21 @@ import DataLoader from "dataloader";
     }),
     context: () => {
       return {
-        commentsLoader: new DataLoader(async (rawArticles: any) => {
-          let articles = rawArticles.map((a) => a.toJSON());
+        commentsLoader: new DataLoader(async (articleIds: any) => {
+          let comments: any = await Comment.findAll({
+            where: {
+              articleId: articleIds,
+            },
+          });
+          comments = comments.map((com) => com.toJSON());
 
-          const result: any = {};
-          articles.forEach((article) => {
-            result[article.id] = article;
+          const result = {};
+          comments.forEach((comment) => {
+            result[comment.articleId] ||= [];
+            result[comment.articleId].push(comment);
           });
 
-          return rawArticles.map((a) => result[a]);
+          return articleIds.map((id) => result[id]);
         }),
       };
     },

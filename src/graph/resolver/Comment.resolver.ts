@@ -1,10 +1,10 @@
 import { Resolver, Query, Mutation, Arg, Args } from "type-graphql";
 
-import Comment from "../type/Comments";
-import CommentModel from "../Models/Comments";
-import ArticleModel from "../Models/Articles";
-import commentArgs from "../type/args/addCommentArgs";
-import editCommentArgs from "../type/args/editCommentArgs";
+import Comment from "../type/model/Comments";
+import CommentModel from "../../db/Models/Comments";
+import ArticleModel from "../../db/Models/Articles";
+import commentArgs from "../type/args/addComment.args";
+import editCommentArgs from "../type/args/editComment.args";
 
 @Resolver(Comment)
 class CommentResolver {

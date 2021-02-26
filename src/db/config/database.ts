@@ -1,15 +1,9 @@
 import { Sequelize } from "sequelize-typescript";
-import Article from "../Models/Articles";
-import Comment from "../Models/Comments";
+import { development, test } from "../../dbconfig";
 
-const sequelize = new Sequelize({
-  database: "gcdhg",
-  dialect: "mysql",
-  username: "gcdhg",
-  password: "12345",
-  host: "localhost",
-  models: [Article, Comment],
-});
+const db = process.env.MODE === "test" ? test : development;
+
+const sequelize = new Sequelize(db);
 
 export const check = async () => {
   try {
