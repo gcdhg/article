@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import database from "../db/config/database";
+import database from "../../db/config/database";
 
 describe("article crud", () => {
   let dbArt;
@@ -15,23 +15,18 @@ describe("article crud", () => {
     },
   };
 
-  const varBefor = {
+  const variables = {
     title: "hello there",
     body: "general kenobi",
   };
 
-  const variables = {
-    title: "hello there edited",
-    body: "general kenobi edited",
-  };
-
-  it("edit article", async () => {
-    dbArt = await database.models.Article.create(varBefor);
+  it("delete article", async () => {
+    dbArt = await database.models.Article.create(variables);
     dbArt = dbArt.toJSON();
 
     const query = `
     mutation {
-      editArticle (id: ${dbArt.id},title: "${variables.title}", body: "${variables.body}") {
+      deleteArticle (id: ${dbArt.id}) {
         id
         title
         body
@@ -47,8 +42,19 @@ describe("article crud", () => {
     });
 
     expect(res.status).toBe(200);
-    let json = await res.json();
-    json = json.data.editArticle;
+    let json: any = await res.json();
+    json = json.data.deleteArticle;
+
+    const articles = await database.models.Article.findAll();
+    expect(articles).toEqual(
+      expect.not.arrayContaining([
+        {
+          id: Number(json.id),
+          title: variables.title,
+          body: variables.body,
+        },
+      ])
+    );
     expect(json).toMatchObject(variables);
   });
 });

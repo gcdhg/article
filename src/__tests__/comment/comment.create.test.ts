@@ -1,8 +1,9 @@
 import fetch from "node-fetch";
-import database from "../db/config/database";
+import database from "../../db/config/database";
 
 describe("comment crud", () => {
   let dbArt;
+  
 
   const options = {
     method: "POST",
