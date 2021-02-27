@@ -2,10 +2,6 @@ import fetch from "node-fetch";
 import database from "../../db/config/database";
 
 describe("article crud", () => {
-  beforeAll(async () => {
-    // await database.sync({ force: true });
-  });
-
   const options = {
     method: "POST",
     headers: {
