@@ -24,7 +24,7 @@ describe("article crud", () => {
 
   const query = `
     mutation {
-      addArcticle(title: "${variables.title}", body: "${variables.body}") {
+      addArticle(title: "${variables.title}", body: "${variables.body}") {
         id
         title
         body
@@ -42,7 +42,7 @@ describe("article crud", () => {
 
     expect(res.status).toBe(200);
     let json = await res.json();
-    json = json.data.addArcticle;
+    json = json.data.addArticle;
 
     let article: any = await database.models.Article.findOne({
       where: { id: json.id },

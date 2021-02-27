@@ -24,7 +24,7 @@ describe("article fields", () => {
 
     let query = `
       query {
-        arcticle(id: ${art.id}) {
+        article(id: ${art.id}) {
           randomfield
         }
       }`;
@@ -41,7 +41,7 @@ describe("article fields", () => {
 
     expect(res.status).toBe(200);
     let json: any = await res.json();
-    json = json.data.arcticle.randomfield;
+    json = json.data.article.randomfield;
     expect(json[0]).not.toEqual(json[1]);
 
     json.forEach((index) => {

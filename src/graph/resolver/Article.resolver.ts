@@ -19,12 +19,12 @@ import editArticleArgs from "../type/args/editArticle.args";
 @Resolver((of) => Article)
 class ArticleResolver {
   @Query((returns) => [Article])
-  async arcticles() {
+  async articles() {
     return await ArticleModel.findAll();
   }
 
   @Query((returns) => Article)
-  async arcticle(@Arg("id") id: number) {
+  async article(@Arg("id") id: number) {
     const user = await ArticleModel.findOne({
       where: {
         id: id,
@@ -34,7 +34,7 @@ class ArticleResolver {
   }
 
   @Mutation((returns) => Article)
-  async addArcticle(
+  async addArticle(
     @Args() { title, body }: addArticleArgs
   ): Promise<ArticleModel> {
     try {
