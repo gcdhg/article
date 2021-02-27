@@ -8,6 +8,7 @@ const development: SequelizeOptions = {
   username: "gcdhg",
   password: "12345",
   host: "localhost",
+  logging: () => {},
   models: [Article, Comment],
 };
 

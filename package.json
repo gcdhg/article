@@ -4,7 +4,8 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    "start": "ts-node-dev --respawn src/server.ts"
+    "start": "ts-node-dev --respawn src/server.ts",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",

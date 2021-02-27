@@ -19,9 +19,11 @@ import DataLoader from "dataloader";
 
 (async () => {
   const app = express();
+
   const path = "/graphql";
 
   database.sync({ force: true });
+  // database.sync();
   await check();
 
   const server = new ApolloServer({
