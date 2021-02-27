@@ -3,7 +3,7 @@ import database from "../db/config/database";
 
 describe("article crud", () => {
   beforeAll(async () => {
-    await database.sync({ force: true });
+    // await database.sync({ force: true });
   });
 
   const options = {
@@ -41,9 +41,13 @@ describe("article crud", () => {
     });
 
     expect(res.status).toBe(200);
-    let article: any = await database.models.Article.findOne();
     let json = await res.json();
     json = json.data.addArcticle;
+
+    let article: any = await database.models.Article.findOne({
+      where: { id: json.id },
+    });
+
     article = article.toJSON();
     article.id = article.id.toString();
     expect(article).toMatchObject(json);
